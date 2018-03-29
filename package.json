@@ -1,38 +1,55 @@
 {
-  "name": "connect-history-api-fallback",
-  "version": "1.5.0",
-  "description": "Provides a fallback for non-existing directories so that the HTML 5 history API can be used.",
-  "keyswords": [
-    "connect",
-    "html5",
-    "history api",
-    "fallback",
-    "spa"
-  ],
-  "engines": {
-    "node": ">=0.8"
+  "name": "egg-history-api-fallback",
+  "version": "1.0.0",
+  "description": "egg Middleware to proxy requests through a specified index page, useful for Single Page Applications that utilise the HTML5 History API",
+  "eggPlugin": {
+    "name": "historyApiFallback"
   },
-  "main": "lib/index.js",
-  "files": ["lib"],
+  "keywords": [
+    "egg",
+    "eggPlugin",
+    "egg-plugin"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "autod": "^3.0.0",
+    "autod-egg": "^1.0.0",
+    "egg": "^2.0.0",
+    "egg-bin": "^4.3.0",
+    "egg-ci": "^1.8.0",
+    "egg-mock": "^3.13.0",
+    "eslint": "^4.11.0",
+    "eslint-config-egg": "^5.1.0",
+    "webstorm-disable-index": "^1.2.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "scripts": {
-    "test": "eslint lib/index.js test/index_test.js && nodeunit test/index_test.js"
+    "test": "npm run lint -- --fix && egg-bin pkgfiles && npm run test-local",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
+    "lint": "eslint .",
+    "ci": "egg-bin pkgfiles --check && npm run lint && npm run cov",
+    "pkgfiles": "egg-bin pkgfiles",
+    "autod": "autod"
+  },
+  "files": [
+    "app.js",
+    "agent.js",
+    "config"
+  ],
+  "ci": {
+    "version": "8, 9"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/bripkens/connect-history-api-fallback.git"
+    "url": "git+https://github.com/eggjs/egg-history-api-fallback.git"
   },
-  "author": {
-    "name": "Ben Ripkens",
-    "email": "bripkens.dev@gmail.com",
-    "url": "http://bripkens.de"
+  "bugs": {
+    "url": "https://github.com/eggjs/egg/issues"
   },
-  "contributors": [
-    "Craig Myles <cr@igmyles.com> (http://www.craigmyles.com)"
-  ],
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^0.18.0",
-    "nodeunit": "^0.9.1",
-    "sinon": "^1.14.1"
-  }
+  "homepage": "https://github.com/eggjs/egg-history-api-fallback#readme",
+  "author": "im.shenshen@qq.com",
+  "license": "MIT"
 }
