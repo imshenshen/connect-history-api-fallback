@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * egg-history-api-fallback default config
@@ -6,5 +6,5 @@
  * @property {String} SOME_KEY - some description
  */
 exports.historyApiFallback = {
-
-};
+  disableDotRule: true
+}

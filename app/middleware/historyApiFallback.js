@@ -1,109 +1,58 @@
-'use strict';
+'use strict'
 
-var url = require('url');
+var url = require('url')
 
-module.exports = (options,app)=>{
-  options = options || {};
-  var logger = getLogger(options);
+module.exports = (options = {}, app) => {
+  const logger = getLogger(options)
 
-  return async function historyApiFallback(ctx,next) {
-
-      var headers = req.headers;
-      if (req.method !== 'GET') {
-        logger(
-          'Not rewriting',
-          req.method,
-          req.url,
-          'because the method is not GET.'
-        );
-        return next();
-      } else if (!headers || typeof headers.accept !== 'string') {
-        logger(
-          'Not rewriting',
-          req.method,
-          req.url,
-          'because the client did not send an HTTP accept header.'
-        );
-        return next();
-      } else if (headers.accept.indexOf('application/json') === 0) {
-        logger(
-          'Not rewriting',
-          req.method,
-          req.url,
-          'because the client prefers JSON.'
-        );
-        return next();
-      } else if (!acceptsHtml(headers.accept, options)) {
-        logger(
-          'Not rewriting',
-          req.method,
-          req.url,
-          'because the client does not accept HTML.'
-        );
-        return next();
+  return async function historyApiFallback(ctx, next) {
+    const headers = ctx.headers
+    if (ctx.method !== 'GET' || !ctx.accepts(options.accepts || 'html')) {
+      return next()
+    }
+    var parsedUrl = url.parse(ctx.url)
+    var rewriteTarget
+    options.rewrites = options.rewrites || []
+    for (var i = 0; i < options.rewrites.length; i++) {
+      var rewrite = options.rewrites[i]
+      var match = parsedUrl.pathname.match(rewrite.from)
+      if (match !== null) {
+        rewriteTarget = evaluateRewriteRule(parsedUrl, match, rewrite.to, ctx)
+        ctx.url = rewriteTarget
+        return next()
       }
+    }
 
-      var parsedUrl = url.parse(req.url);
-      var rewriteTarget;
-      options.rewrites = options.rewrites || [];
-      for (var i = 0; i < options.rewrites.length; i++) {
-        var rewrite = options.rewrites[i];
-        var match = parsedUrl.pathname.match(rewrite.from);
-        if (match !== null) {
-          rewriteTarget = evaluateRewriteRule(parsedUrl, match, rewrite.to, req);
-          logger('Rewriting', req.method, req.url, 'to', rewriteTarget);
-          req.url = rewriteTarget;
-          return next();
-        }
-      }
+    var pathname = parsedUrl.pathname
+    if (
+      pathname.lastIndexOf('.') > pathname.lastIndexOf('/') &&
+      options.disableDotRule !== true
+    ) {
+      return next()
+    }
 
-      var pathname = parsedUrl.pathname;
-      if (pathname.lastIndexOf('.') > pathname.lastIndexOf('/') &&
-        options.disableDotRule !== true) {
-        logger(
-          'Not rewriting',
-          req.method,
-          req.url,
-          'because the path includes a dot (.) character.'
-        );
-        return next();
-      }
-
-      rewriteTarget = options.index || '/index.html';
-      logger('Rewriting', req.method, req.url, 'to', rewriteTarget);
-      req.url = rewriteTarget;
-      next();
+    rewriteTarget = options.index || '/index.html'
+    logger('Rewriting', ctx.method, ctx.url, 'to', rewriteTarget)
+    ctx.url = rewriteTarget
+    next()
   }
 
-  function evaluateRewriteRule(parsedUrl, match, rule, req) {
+  function evaluateRewriteRule(parsedUrl, match, rule, ctx) {
     if (typeof rule === 'string') {
-      return rule;
+      return rule
     } else if (typeof rule !== 'function') {
-      throw new Error('Rewrite rule can only be of type string or function.');
+      throw new Error('Rewrite rule can only be of type string or function.')
     }
 
-    return rule({
-      parsedUrl: parsedUrl,
-      match: match,
-      request: req
-    });
-  }
-
-  function acceptsHtml(header, options) {
-    options.htmlAcceptHeaders = options.htmlAcceptHeaders || ['text/html', '*/*'];
-    for (var i = 0; i < options.htmlAcceptHeaders.length; i++) {
-      if (header.indexOf(options.htmlAcceptHeaders[i]) !== -1) {
-        return true;
-      }
-    }
-    return false;
+    return rule({ parsedUrl, match, ctx })
   }
 
   function getLogger(options) {
     if (options && options.logger) {
-      return options.logger;
+      return options.logger
     } else if (options && options.verbose) {
-      return console.log.bind(console);
+      return console.log.bind(console)
     }
-    return function(){};
+    return function() {}
   }
+}

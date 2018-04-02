@@ -18,8 +18,19 @@
     "egg-bin": "^4.3.0",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.13.0",
-    "eslint": "^4.11.0",
+    "eslint": "^4.19.1",
     "eslint-config-egg": "^5.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-prettier-standard": "^1.0.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-prettier": "^2.6.0",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.15.0-rc.13",
+    "lint-staged": "^7.0.2",
+    "prettier": "^1.11.1",
     "webstorm-disable-index": "^1.2.0"
   },
   "engines": {
@@ -51,5 +62,21 @@
   },
   "homepage": "https://github.com/eggjs/egg-history-api-fallback#readme",
   "author": "im.shenshen@qq.com",
-  "license": "MIT"
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint-check",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  }
 }
