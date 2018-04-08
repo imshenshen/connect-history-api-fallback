@@ -1,6 +1,6 @@
 {
   "name": "egg-history-api-fallback",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "egg Middleware to proxy requests through a specified index page, useful for Single Page Applications that utilise the HTML5 History API",
   "eggPlugin": {
     "name": "historyApiFallback"
@@ -47,7 +47,7 @@
   },
   "files": [
     "app.js",
-    "agent.js",
+    "app",
     "config"
   ],
   "ci": {
@@ -55,12 +55,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eggjs/egg-history-api-fallback.git"
+    "url": "git@github.com:imshenshen/connect-history-api-fallback.git"
   },
   "bugs": {
-    "url": "https://github.com/eggjs/egg/issues"
+    "url": "https://github.com/imshenshen/connect-history-api-fallback/issues"
   },
-  "homepage": "https://github.com/eggjs/egg-history-api-fallback#readme",
+  "homepage": "git@github.com:imshenshen/connect-history-api-fallback.git",
   "author": "im.shenshen@qq.com",
   "license": "MIT",
   "husky": {
