@@ -34,7 +34,7 @@ module.exports = (options = {}, app) => {
     rewriteTarget = options.index || '/index.html'
     logger('Rewriting', ctx.method, ctx.url, 'to', rewriteTarget)
     ctx.url = rewriteTarget
-    next()
+    return next()
   }
 
   function evaluateRewriteRule(parsedUrl, match, rule, ctx) {

@@ -1,6 +1,6 @@
 {
   "name": "egg-history-api-fallback",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "egg Middleware to proxy requests through a specified index page, useful for Single Page Applications that utilise the HTML5 History API",
   "eggPlugin": {
     "name": "historyApiFallback"
