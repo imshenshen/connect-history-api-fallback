@@ -7,7 +7,10 @@ module.exports = (options = {}, app) => {
 
   return async function historyApiFallback(ctx, next) {
     const headers = ctx.headers
-    if (ctx.method !== 'GET' || !ctx.accepts(options.accepts || 'html')) {
+    if (
+      ctx.method !== 'GET' ||
+      ctx.accepts(options.accepts || ['json', 'html']) !== 'html'
+    ) {
       return next()
     }
     var parsedUrl = url.parse(ctx.url)
